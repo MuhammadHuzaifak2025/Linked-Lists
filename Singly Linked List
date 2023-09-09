@@ -1,0 +1,204 @@
+#include <iostream>
+using namespace std;
+
+// Define a structure for a node in the linked list
+class Node 
+{
+	public:
+		int data;
+    	Node* next;
+};
+
+// Creating Node
+Node* createNode(int data) 
+{
+    Node* newNode = new Node; //Initializing a Node
+    newNode->data = data; //Node points to Data
+    newNode->next = NULL; //Node now points to the next position, which is initialized as NULL
+    return newNode;
+}
+
+// Inserting Node At Beginning
+Node* insertAtBeginning(Node* linked, int data) 
+{
+    Node* newNode = createNode(data); //Node is created with an initial data, and points to a NULL position
+    newNode->next = linked;
+    return newNode;
+}
+
+// Inserting Nodes at Any Position
+Node* insertAtPosition(Node* head, int data, int position) 
+{
+    if (position < 1) //there is no position lesser than 1
+	{
+        cout << "Invalid position." << endl;
+        return head;
+    }
+
+    if (position == 1 || head == NULL) // If the position is 1 or the list is empty, insert at the beginning
+	{
+        Node* newNode = createNode(data); //New Node created
+        newNode->next = head; //
+        return newNode;
+    }
+
+    Node* current = head;
+    int currentPosition = 1;
+
+    while (currentPosition < position - 1 && current->next != NULL) // Traverse the list to find the node immediately before the desired position
+	{
+        current = current->next;
+        currentPosition++;
+    }
+
+    // Check if the position is valid
+    if (currentPosition < position - 1) {
+        cout << "Position is out of bounds." << endl;
+        return head;
+    }
+
+    // Create a new node with the data
+    Node* newNode = createNode(data);
+
+    // Insert the new node at the specified position
+    newNode->next = current->next;
+    current->next = newNode;
+
+    return head;
+}
+
+// Inserting Nodes At End
+Node* insertAtEnd(Node* head, int data) 
+{
+    Node* newNode = createNode(data);
+
+    if (head == NULL) 
+	{
+        return newNode; // If the list is empty, the new node becomes the head
+    }
+
+    Node* current = head;
+    while (current->next != NULL) 
+	{
+        current = current->next; //Current Node will now point to next node
+    }
+    current->next = newNode;
+    return head;
+}
+
+// Deleting Nodes
+Node* deleteNode(Node* head, int data) 
+{
+    if (head == NULL) 
+	{
+        return NULL; // If the list is empty, nothing to delete
+    }
+
+    if (head->data == data) //if the head node pointing at data has the same data as the same input given
+	{
+        Node* temp = head; //New node created to store head's data
+        head = head->next; //head can now point towards the next space in the List
+        delete temp;//The temp node is deleted
+        return head;
+    }
+
+    Node* current = head; //Current Node created to store head's data
+    while (current->next != NULL && current->next->data != data) //checks if there is another node and if the data is the same as the input data
+	{
+        current = current->next; //Current Node will now point to next node
+    }
+
+    if (current->next != NULL) //if the next node is not the end
+	{
+        Node* temp = current->next; //New node created to store next node's data
+        current->next = current->next->next; //Next node skipped by adjusting Current Node
+        delete temp;
+    }
+
+    return head;
+}
+
+// Display head List
+void displayList(Node* head) 
+{
+    Node* current = head; 
+    while (current != NULL) //until current pointer points to a NULL space, meaning no data, (List doesn't exist there)
+	{
+        cout << current->data << " ";
+        current = current->next;
+    }
+    cout << endl;
+}
+
+int main() 
+{
+    Node* head = NULL; // Initialize an empty head List called head
+    int position;
+    int choice;
+
+    while (true) //Infinite loop
+	{
+        cout << "Your head List right now is: ";
+        displayList(head);
+        cout << "What do you want to do with this head List?" << endl;
+        cout << "1: Insert at the beginning." << endl;
+        cout << "2: Insert at the end." << endl;
+        cout << "3: Insert at a specified space." << endl;
+        cout << "4: Display Linked List." << endl;
+        cout << "5: Delete Node." << endl;
+        cout << "6: Exit." << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) 
+		{
+            case 1: 
+            	//Insertion At Beginning
+                int data;
+                cout << "Enter Data to insert at the Beginning: ";
+                cin >> data;
+                head = insertAtBeginning(head, data);
+                break;
+            
+            case 2: 
+            	//Insertion At End
+                cout << "Enter Data to insert at the End: ";
+                cin >> data;
+                head = insertAtEnd(head, data);
+                break;
+            
+            case 3: 
+            	//Insertion At Specified Space
+                cout << "Enter Data to insert: ";
+                cin >> data;
+                cout <<"Enter the Position at which to insert: ";
+                cin >>position;
+                head = insertAtPosition(head, data, position);
+                break;
+            case 4:
+                cout << "head List: ";
+                displayList(head);
+                break;
+                
+            case 5: 
+            	//Data Deletion
+                cout << "Enter Data to delete: ";
+                cin >> data;
+                head = deleteNode(head, data);
+                break;
+            
+            case 6:
+                // head List Deletion
+                while (head != NULL) 
+				{
+                    Node* temp = head;
+                    head = head->next;
+                    delete temp;
+                }
+                // Exit Program
+            default:
+                cout << "Invalid Choice."<<endl<<"Please try again." << endl;
+        }
+    }
+
+}
