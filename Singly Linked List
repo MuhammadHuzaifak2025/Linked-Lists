@@ -141,6 +141,39 @@ Node* deleteHeadNode(Node* head, int data)
 
 }
 
+Node* listBubbleSort(Node* head) 
+{
+    if (!head || !head->next) //if head doesn't exist or has only one element
+	{
+        return head; 
+    }
+
+    bool swapped; //created swapped bool just like in normal bubble sort
+    Node* current; //current Node created
+    Node* last = NULL; //last node created which has no value
+
+    do 
+	{
+        swapped = false; //intitialized with false to implement sorting
+        current = head; //current has head
+        while (current->next != last)  //until current's next pointer is at last
+		{
+            if (current->data > current->next->data) //if the current data is smaller than the right most data
+			{
+                // Swap nodes
+                int temp = current->data; //do the same thing as in normal sorting //temp will have the current data
+                current->data = current->next->data; //current data will now have the next data
+                current->next->data = temp; //next data will have the temp data
+                swapped = true; //swapping done
+            }
+            current = current->next; //current traverses
+        }
+        last = current; //last will have the current data
+    } while (swapped); //until swapped is false //until all the data is sorted
+
+    return head;
+}
+
 // Display head List
 void displayList(Node* head) 
 {
@@ -241,7 +274,8 @@ int main()
         cout << "6: Search for a value." << endl;
         cout << "7: Reverse the linked list." << endl;
         cout << "8: Delete Head Node." << endl;
-        cout << "9: Exit." << endl;
+        cout << "9: Sort in Ascending Order." << endl;
+        cout << "10: Exit." << endl;
         cout << "Enter your choice: ";
         cin >> choice;
 
@@ -303,6 +337,14 @@ int main()
                 break;
             
             case 9:
+            	//Linked List Bubble Sort
+                cout << "Linked list after sorting is:" << endl;
+                head = listBubbleSort(head);
+                displayList(head);
+                break;
+
+            
+            case 10:
                 // Delete the entire linked list to free memory
                 while (head != NULL) 
                 {
