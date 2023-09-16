@@ -7,215 +7,222 @@ class Node
 	public:
 		int data;
     	Node* next;
+    	
+    	Node()
+    	{
+    		data=0;
+    		next=NULL;
+		}
+			
+		// Creating Node
+		Node* createNode(int data) 
+		{
+		    Node* newNode = new Node; //Initializing a Node
+		    newNode->data = data; //Node points to Data
+		    newNode->next = NULL; //Node now points to the next position, which is initialized as NULL
+		    return newNode;
+		}
+		
+		// Inserting Node At Beginning
+		Node* insertAtBeginning(Node* linked, int data) 
+		{
+		    Node* newNode = createNode(data); //Node is created with an initial data, and points to a NULL position
+		    newNode->next = linked;
+		    return newNode;
+		}
+		
+		// Inserting Nodes at Any Position
+		Node* insertAtPosition(Node* head, int data, int position) 
+		{
+		    if (position < 1) //there is no position lesser than 1
+			{
+		        cout << "Invalid position." << endl;
+		        return head;
+		    }
+		
+		    if (position == 1 || head == NULL) // If the position is 1 or the list is empty, insert at the beginning
+			{
+		        Node* newNode = createNode(data); //New Node created
+		        newNode->next = head; //
+		        return newNode;
+		    }
+		
+		    Node* current = head;
+		    int currentPosition = 1;
+		
+		    while (currentPosition < position - 1 && current->next != NULL) // Traverse the list to find the node immediately before the desired position
+			{
+		        current = current->next;
+		        currentPosition++;
+		    }
+		
+		    // Check if the position is valid
+		    if (currentPosition < position - 1) 
+			{
+		        cout << "Position is out of bounds." << endl;
+		        return head;
+		    }
+		
+		    // Create a new node with the data
+		    Node* newNode = createNode(data);
+		
+		    // Insert the new node at the specified position
+		    newNode->next = current->next;
+		    current->next = newNode;
+		
+		    return head;
+		}
+		
+		// Inserting Nodes At End
+		Node* insertAtEnd(Node* head, int data) 
+		{
+		    Node* newNode = createNode(data);
+		
+		    if (head == NULL) 
+			{
+		        return newNode; // If the list is empty, the new node becomes the head
+		    }
+		
+		    Node* current = head;
+		    while (current->next != NULL) 
+			{
+		        current = current->next; //Current Node will now point to next node
+		    }
+		    current->next = newNode;
+		    return head;
+		}
+		
+		// Deleting Nodes
+		Node* deleteNode(Node* head, int data) 
+		{
+		    if (head == NULL) 
+			{
+		        return NULL; // If the list is empty, nothing to delete
+		    }
+		
+		    if (head->data == data) //if the head node pointing at data has the same data as the same input given
+			{
+		        Node* temp = head; //New node created to store head's data
+		        head = head->next; //head can now point towards the next space in the List
+		        delete temp;//The temp node is deleted
+		        return head;
+		    }
+		
+		    Node* current = head; //Current Node created to store head's data
+		    while (current->next != NULL && current->next->data != data) //checks if there is another node and if the data is the same as the input data
+			{
+		        current = current->next; //Current Node will now point to next node
+		    }
+		
+		    if (current->next != NULL) //if the next node is not the end
+			{
+		        Node* temp = current->next; //New node created to store next node's data
+		        current->next = current->next->next; //Next node skipped by adjusting Current Node
+		        delete temp;
+		    }
+		
+		    return head;
+		}
+		
+		// Deleting Node at head
+		Node* deleteHeadNode(Node* head, int data) 
+		{
+		    if (head != NULL) //if head is not at end
+			{
+			    Node* temp = head; //Create a temporary pointer
+			    head = head->next; //Update the head to the next node
+			    delete temp; //Delete the old head node
+			} 
+			else //No head node (No list)
+			{    
+			    cout << "List is empty. No head node to delete." << endl;
+			}
+		
+		}
+		
+		// Display head List
+		void displayList(Node* head) 
+		{
+		    Node* current = head; 
+		    while (current != NULL) //until current pointer points to a NULL space, meaning no data, (List doesn't exist there)
+			{
+		        cout << current->data << " ";
+		        current = current->next;
+		    }
+		    cout << endl;
+		}
+		
+		// Search for a value in the linked list
+		bool search(int key, Node* head) 
+		{
+		    Node* temp = head;
+		    while (temp != NULL) 
+			{
+		        if (temp->data == key) 
+				{
+		            cout << "Match Found." <<endl;
+		            return true;
+		        }
+		        temp = temp->next;
+		    }
+		    cout << "Match Not Found." <<endl;
+		    return false;
+		}
+		
+		Node* reverse(Node* head) 
+		{
+		    Node* current = head;
+		    Node* next = NULL;
+		    Node* previous = NULL;
+		
+		    while (current != NULL) 
+		    {
+		        next = current->next;
+		        current->next = previous;
+		        previous = current;
+		        current = next;
+		    }
+		
+		    head = previous;
+		
+		    cout << "List has been reversed." << endl;
+		    return head;
+		}
+		
+		bool searchPosition(int position, Node* head) 
+		{
+		    if (position < 1) 
+		    {
+		        cout << "Invalid position." << endl;
+		        return false; // Return false to indicate position error
+		    }
+		    
+		    if (head == NULL) 
+		    {
+		        cout << "List is empty." << endl;
+		        return false; // Return false to indicate an empty list
+		    }
+		    
+		    Node* current = head;
+		    int currentPosition = 1;
+		    
+		    while (currentPosition < position && current != NULL) //until current position is at position we want and current pointre is not at end
+		    {
+		        current = current->next; //current traverses
+		        currentPosition++; //Current Position increments
+		    }
+		
+		    if (currentPosition == position && current != NULL) //if current position is at position we want and current is at end
+		    {
+		        cout << "Item at position " << position << ": " << current->data << endl; //print out the position's data
+		        return true;
+		    }
+		
+		    cout << "Position is out of bounds." << endl;
+		    return false;
+		}
 };
 
-// Creating Node
-Node* createNode(int data) 
-{
-    Node* newNode = new Node; //Initializing a Node
-    newNode->data = data; //Node points to Data
-    newNode->next = NULL; //Node now points to the next position, which is initialized as NULL
-    return newNode;
-}
-
-// Inserting Node At Beginning
-Node* insertAtBeginning(Node* linked, int data) 
-{
-    Node* newNode = createNode(data); //Node is created with an initial data, and points to a NULL position
-    newNode->next = linked;
-    return newNode;
-}
-
-// Inserting Nodes at Any Position
-Node* insertAtPosition(Node* head, int data, int position) 
-{
-    if (position < 1) //there is no position lesser than 1
-	{
-        cout << "Invalid position." << endl;
-        return head;
-    }
-
-    if (position == 1 || head == NULL) // If the position is 1 or the list is empty, insert at the beginning
-	{
-        Node* newNode = createNode(data); //New Node created
-        newNode->next = head; //
-        return newNode;
-    }
-
-    Node* current = head;
-    int currentPosition = 1;
-
-    while (currentPosition < position - 1 && current->next != NULL) // Traverse the list to find the node immediately before the desired position
-	{
-        current = current->next;
-        currentPosition++;
-    }
-
-    // Check if the position is valid
-    if (currentPosition < position - 1) 
-	{
-        cout << "Position is out of bounds." << endl;
-        return head;
-    }
-
-    // Create a new node with the data
-    Node* newNode = createNode(data);
-
-    // Insert the new node at the specified position
-    newNode->next = current->next;
-    current->next = newNode;
-
-    return head;
-}
-
-// Inserting Nodes At End
-Node* insertAtEnd(Node* head, int data) 
-{
-    Node* newNode = createNode(data);
-
-    if (head == NULL) 
-	{
-        return newNode; // If the list is empty, the new node becomes the head
-    }
-
-    Node* current = head;
-    while (current->next != NULL) 
-	{
-        current = current->next; //Current Node will now point to next node
-    }
-    current->next = newNode;
-    return head;
-}
-
-// Deleting Nodes
-Node* deleteNode(Node* head, int data) 
-{
-    if (head == NULL) 
-	{
-        return NULL; // If the list is empty, nothing to delete
-    }
-
-    if (head->data == data) //if the head node pointing at data has the same data as the same input given
-	{
-        Node* temp = head; //New node created to store head's data
-        head = head->next; //head can now point towards the next space in the List
-        delete temp;//The temp node is deleted
-        return head;
-    }
-
-    Node* current = head; //Current Node created to store head's data
-    while (current->next != NULL && current->next->data != data) //checks if there is another node and if the data is the same as the input data
-	{
-        current = current->next; //Current Node will now point to next node
-    }
-
-    if (current->next != NULL) //if the next node is not the end
-	{
-        Node* temp = current->next; //New node created to store next node's data
-        current->next = current->next->next; //Next node skipped by adjusting Current Node
-        delete temp;
-    }
-
-    return head;
-}
-
-// Deleting Node at head
-Node* deleteHeadNode(Node* head, int data) 
-{
-    if (head != NULL) //if head is not at end
-	{
-	    Node* temp = head; //Create a temporary pointer
-	    head = head->next; //Update the head to the next node
-	    delete temp; //Delete the old head node
-	} 
-	else //No head node (No list)
-	{    
-	    cout << "List is empty. No head node to delete." << endl;
-	}
-
-}
-
-// Display head List
-void displayList(Node* head) 
-{
-    Node* current = head; 
-    while (current != NULL) //until current pointer points to a NULL space, meaning no data, (List doesn't exist there)
-	{
-        cout << current->data << " ";
-        current = current->next;
-    }
-    cout << endl;
-}
-
-// Search for a value in the linked list
-bool search(int key, Node* head) 
-{
-    Node* temp = head;
-    while (temp != NULL) 
-	{
-        if (temp->data == key) 
-		{
-            cout << "Match Found." <<endl;
-            return true;
-        }
-        temp = temp->next;
-    }
-    cout << "Match Not Found." <<endl;
-    return false;
-}
-
-Node* reverse(Node* head) 
-{
-    Node* current = head;
-    Node* next = NULL;
-    Node* previous = NULL;
-
-    while (current != NULL) 
-    {
-        next = current->next;
-        current->next = previous;
-        previous = current;
-        current = next;
-    }
-
-    head = previous;
-
-    cout << "List has been reversed." << endl;
-    return head;
-}
-
-bool searchPosition(int position, Node* head) 
-{
-    if (position < 1) 
-    {
-        cout << "Invalid position." << endl;
-        return false; // Return false to indicate position error
-    }
-    
-    if (head == NULL) 
-    {
-        cout << "List is empty." << endl;
-        return false; // Return false to indicate an empty list
-    }
-    
-    Node* current = head;
-    int currentPosition = 1;
-    
-    while (currentPosition < position && current != NULL) //until current position is at position we want and current pointre is not at end
-    {
-        current = current->next; //current traverses
-        currentPosition++; //Current Position increments
-    }
-
-    if (currentPosition == position && current != NULL) //if current position is at position we want and current is at end
-    {
-        cout << "Item at position " << position << ": " << current->data << endl; //print out the position's data
-        return true;
-    }
-
-    cout << "Position is out of bounds." << endl;
-    return false;
-}
 
 int main() 
 {
@@ -225,7 +232,7 @@ int main()
     while (true) //Infinite loop
 	{
         cout << "Your Singly List right now is: ";
-        displayList(head);
+        head->displayList(head);
         cout << "What do you want to do with this head List?" << endl;
         cout << "1: Insert at the beginning." << endl;
         cout << "2: Insert at the end." << endl;
@@ -246,14 +253,14 @@ int main()
                 int data;
                 cout << "Enter Data to insert at the Beginning: ";
                 cin >> data;
-                head = insertAtBeginning(head, data);
+                head->insertAtBeginning(head, data);
                 break;
             
             case 2: 
             	//Insertion At End
                 cout << "Enter Data to insert at the End: ";
                 cin >> data;
-                head = insertAtEnd(head, data);
+                head->insertAtEnd(head, data);
                 break;
             
             case 3: 
@@ -262,38 +269,38 @@ int main()
                 cin >> data;
                 cout <<"Enter the Position at which to insert: ";
                 cin >>position;
-                head = insertAtPosition(head, data, position);
+                head->insertAtPosition(head, data, position);
                 break;
             case 4:
                 cout << "head List: ";
-                displayList(head);
+                head->displayList(head);
                 break;
                 
             case 5: 
             	//Data Deletion
                 cout << "Enter Data to delete: ";
                 cin >> data;
-                head = deleteNode(head, data);
+                head->deleteNode(head, data);
                 break;
             
             case 6:
                 // Search for a value
                 cout << "Enter value to search: ";
                 cin >> data;
-                search(data, head);
+                head->search(data, head);
                 break;
             
             case 7:
                 // Reverse the linked list
-                head=reverse(head);
+                head->reverse(head);
                 cout << "Linked List has been reversed." << endl;
                 cout << "Linked List has been reversed." << endl;
-    			displayList(head); // Display the reversed list
+    			head->displayList(head); // Display the reversed list
                 break;
             
             case 8: 
             	//Head Node Deletion
-                deleteHeadNode(head, data);
+                head->deleteHeadNode(head, data);
                 break;
             
             case 9:
