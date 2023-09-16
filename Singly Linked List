@@ -164,7 +164,12 @@ Node* listBubbleSort(Node* head)
                 int temp = current->data; //do the same thing as in normal sorting //temp will have the current data
                 current->data = current->next->data; //current data will now have the next data
                 current->next->data = temp; //next data will have the temp data
-                swapped = true; //swapping done
+                
+                if (current == head)
+                {
+                	head->data= temp;
+				}
+				swapped = true;
             }
             current = current->next; //current traverses
         }
