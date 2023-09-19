@@ -7,12 +7,6 @@ class Node
 	public:
 		int data;
     	Node* next;
-    	
-    	Node()
-    	{
-    		data=0;
-    		next=NULL;
-		}
 };
 
 // Creating Node
@@ -58,8 +52,7 @@ Node* insertAtPosition(Node* head, int data, int position)
     }
 
     // Check if the position is valid
-    if (currentPosition < position - 1) 
-	{
+    if (currentPosition < position - 1) {
         cout << "Position is out of bounds." << endl;
         return head;
     }
@@ -125,60 +118,6 @@ Node* deleteNode(Node* head, int data)
     return head;
 }
 
-// Deleting Node at head
-Node* deleteHeadNode(Node* head, int data) 
-{
-    if (head != NULL) //if head is not at end
-	{
-	    Node* temp = head; //Create a temporary pointer
-	    head = head->next; //Update the head to the next node
-	    delete temp; //Delete the old head node
-	} 
-	else //No head node (No list)
-	{    
-	    cout << "List is empty. No head node to delete." << endl;
-	}
-
-}
-
-Node* listBubbleSort(Node* head) 
-{
-    if (!head || !head->next) //if head doesn't exist or has only one element
-	{
-        return head; 
-    }
-
-    bool swapped; //created swapped bool just like in normal bubble sort
-    Node* current; //current Node created
-    Node* last = NULL; //last node created which has no value
-
-    do 
-	{
-        swapped = false; //intitialized with false to implement sorting
-        current = head; //current has head
-        while (current->next != last)  //until current's next pointer is at last
-		{
-            if (current->data > current->next->data) //if the current data is smaller than the right most data
-			{
-                // Swap nodes
-                int temp = current->data; //do the same thing as in normal sorting //temp will have the current data
-                current->data = current->next->data; //current data will now have the next data
-                current->next->data = temp; //next data will have the temp data
-                
-                if (current == head)
-                {
-                	head->data= temp;
-				}
-				swapped = true;
-            }
-            current = current->next; //current traverses
-        }
-        last = current; //last will have the current data
-    } while (swapped); //until swapped is false //until all the data is sorted
-
-    return head;
-}
-
 // Display head List
 void displayList(Node* head) 
 {
@@ -192,83 +131,74 @@ void displayList(Node* head)
 }
 
 // Search for a value in the linked list
-bool search(int key, Node* head) 
-{
-    Node* temp = head;
-    while (temp != NULL) 
+    static bool search(int key, Node* head) 
 	{
-        if (temp->data == key) 
+        Node* temp = head;
+        while (temp != NULL) 
 		{
-            cout << "Match Found." <<endl;
-            return true;
+            if (temp->data == key) 
+			{
+                cout << "Match Found." <<endl;
+                return true;
+            }
+            temp = temp->next;
         }
-        temp = temp->next;
-    }
-    cout << "Match Not Found." <<endl;
-    return false;
-}
-
-Node* reverse(Node* head) 
-{
-    Node* current = head;
-    Node* next = NULL;
-    Node* previous = NULL;
-
-    while (current != NULL) 
-    {
-        next = current->next;
-        current->next = previous;
-        previous = current;
-        current = next;
+        cout << "Match Not Found." <<endl;
+        return false;
     }
 
-    head = previous;
-
-    cout << "List has been reversed." << endl;
-    return head;
-}
-
-bool searchPosition(int position, Node* head) 
-{
-    if (position < 1) 
-    {
-        cout << "Invalid position." << endl;
-        return false; // Return false to indicate position error
-    }
-    
-    if (head == NULL) 
-    {
-        cout << "List is empty." << endl;
-        return false; // Return false to indicate an empty list
-    }
-    
-    Node* current = head;
-    int currentPosition = 1;
-    
-    while (currentPosition < position && current != NULL) //until current position is at position we want and current pointre is not at end
-    {
-        current = current->next; //current traverses
-        currentPosition++; //Current Position increments
-    }
-
-    if (currentPosition == position && current != NULL) //if current position is at position we want and current is at end
-    {
-        cout << "Item at position " << position << ": " << current->data << endl; //print out the position's data
-        return true;
-    }
-
-    cout << "Position is out of bounds." << endl;
-    return false;
+    // Reverse the linked list
+    Node* reverse(Node* head) 
+	{
+	    Node* current = head;
+	    Node* next = NULL;
+	    Node* previous = NULL;
+	
+	    while (current != NULL) 
+	    {
+	        next = current->next;
+	        current->next = previous;
+	        previous = current;
+	        current = next;
+	    }
+	
+	    // The new head is the previous node (which was the last node in the original list)
+	    head=previous;
+	    cout<<"List has been reversed."<<endl;
+	    return head;
+	}
+	
+	Node* concatenate(Node* node1, Node* node2)
+	{
+		if (!node1) // Usecase for when first list is empty
+		{
+	        return node2; 
+	    }
+	    
+	    Node* current = node1; //curent points at node1
+	    
+	    while (current->next!=NULL) //until curent->next reaches the end
+	    {
+	    	current=current->next; //current traverses
+		}
+	    
+	    current->next=node2; //current points at node2 //tail of node1 points at head of node2
+	    
+	    node2=NULL; //node2 is rendered NULL to lead it empty so that node1 has node1 and node2
+	    
+	    return node1; 
 }
 
 int main() 
 {
     Node* head = NULL; // Initialize an empty head List called head
+    Node* node1 = NULL; // Initialize an empty head List called node1
+    Node* node2 = NULL; // Initialize an empty head List called node2
     int position;
     int choice;        
     while (true) //Infinite loop
 	{
-        cout << "Your Singly List right now is: ";
+        cout << "Your head List right now is: ";
         displayList(head);
         cout << "What do you want to do with this head List?" << endl;
         cout << "1: Insert at the beginning." << endl;
@@ -278,9 +208,13 @@ int main()
         cout << "5: Delete Node." << endl;
         cout << "6: Search for a value." << endl;
         cout << "7: Reverse the linked list." << endl;
-        cout << "8: Delete Head Node." << endl;
-        cout << "9: Sort in Ascending Order." << endl;
-        cout << "10: Exit." << endl;
+        cout << "8: Concatenate Lists" << endl;
+        cout << "9: Insert Beginning List 1" << endl;
+        cout << "10: Insert Beginning List 2" << endl;
+        cout << "11: Display List 1" << endl;
+        cout << "12: Display List 2" << endl;
+        cout << "13: Display Concatenated List" << endl;
+        cout << "14: Exit." << endl;
         cout << "Enter your choice: ";
         cin >> choice;
 
@@ -330,26 +264,54 @@ int main()
             
             case 7:
                 // Reverse the linked list
-                head=reverse(head);
+                reverse(head);
                 cout << "Linked List has been reversed." << endl;
                 cout << "Linked List has been reversed." << endl;
     			displayList(head); // Display the reversed list
                 break;
             
-            case 8: 
-            	//Head Node Deletion
-                deleteHeadNode(head, data);
-                break;
-            
-            case 9:
-            	//Linked List Bubble Sort
-                cout << "Linked list after sorting is:" << endl;
-                head = listBubbleSort(head);
-                displayList(head);
-                break;
-
-            
-            case 10:
+            case 8:
+	                 // Concatenate Lists
+	                node1 = concatenate(node1, node2);
+	                node2 = NULL;
+	                cout << "Lists concatenated." << endl;
+	                break;
+				
+			case 9:
+					 // Insert at beginning of First Node
+	                int data2;
+	                cout << "Enter Data to insert at the Beginning: ";
+	                cin >> data;
+	                node1 = insertAtBeginning(node1, data);
+	                break;
+	                
+	        case 10:
+	            	  // Insert at beginning of First Node
+	                int data3;
+	                cout << "Enter Data to insert at the Beginning: ";
+	                cin >> data;
+	                node2 = insertAtBeginning(node2, data);
+	                break;    
+				
+	        case 11:
+	                // Display List 1
+	                cout << "List 1: ";
+	                displayList(node1);
+	                break;
+	
+	        case 12:
+	                // Display List 2
+	                cout << "List 2: ";
+	                displayList(node2);
+	                break;
+	
+	        case 13:
+	                // Display Concatenated List
+	                cout << "Concatenated List: ";
+	                displayList(node1);
+	                break;
+	                
+            case 14:
                 // Delete the entire linked list to free memory
                 while (head != NULL) 
                 {
@@ -364,4 +326,3 @@ int main()
     }
 
 }
-
