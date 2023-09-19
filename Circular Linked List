@@ -1,0 +1,115 @@
+#include <iostream>
+using namespace std;
+class Node
+{
+public:
+  string name;
+  Node *Next;
+  Node()
+  {
+    Next = NULL;
+  }
+  Node(string n) : name(n)
+  {
+  }
+};
+class Circular
+{
+public:
+  Node *Head;
+  Node *Tail;
+
+  void insert_at_end(string name)
+  {
+    Node *temp = new Node(name);
+    if (Head == NULL)
+    {
+      Head = temp;
+      Tail = Head;
+      return;
+    }
+    temp->Next = Head;
+    Head = temp;
+    Tail->Next = Head;
+  }
+  void insert_at_start(string name)
+  {
+    Node *temp = new Node(name);
+    if (Head == NULL)
+    {
+      Head = temp;
+      Tail = Head;
+      return;
+    }
+    Tail->Next = temp;
+    temp->Next = Head;
+    Head = temp;
+  }
+  void print()
+  {
+    Node *temp = Head;
+    while (temp->Next != Head)
+    {
+      cout << temp->name << " ";
+      temp = temp->Next;
+    }
+    cout << temp->name << endl;
+  }
+  void search(string name)
+  {
+    Node *temp = Head;
+    while (temp->Next != Head)
+    {
+      if (temp->name == name)
+      {
+        cout << "Found" << endl;
+        return;
+      }
+      temp = temp->Next;
+    }
+    if (temp->name == name)
+    {
+      cout << "Found" << endl;
+      return;
+    }
+    cout << "Not Found" << endl;
+  }
+  void delete_element(string name)
+  {
+    Node *temp = Head;
+    Node *prev;
+    while (temp->Next != Head)
+    {
+      if (temp->name == name)
+      {
+        prev->Next = temp->Next;
+        delete temp;
+        return;
+      }
+      prev = temp;
+      temp = temp->Next;
+    }
+    if (temp->name == name)
+    {
+      prev->Next = temp->Next;
+      delete temp;
+      return;
+    }
+    cout << "Not Found" << endl;
+  }
+};
+
+int main()
+{
+  Circular List1;
+  List1.insert_at_end("Huzaifa");
+  List1.insert_at_end("Shariq");
+  List1.insert_at_end("Alli");
+  List1.insert_at_end("Muzaffar");
+  List1.print();
+  List1.search("Huzaifa");
+  List1.search("Shariq");
+  List1.delete_element("Huzaifa");
+  List1.print();
+  return 0;
+}
